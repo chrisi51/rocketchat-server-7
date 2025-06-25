@@ -317,6 +317,19 @@ describe('autoLink WITHOUT custom hosts settings comming from Rocket.Chat', () =
   });
 });
 
+describe('autoLink with custom schemes', () => {
+  test.each([
+    [
+      'ritzbitz://open',
+      [paragraph([autoLink('ritzbitz://open')])],
+    ],
+  ])('parses %p', (input, output) => {
+    expect(
+      parse(input, { supportSchemesForLink: 'http,https,ritzbitz' })
+    ).toMatchObject(output);
+  });
+});
+
 describe('autoLink helper function', () => {
   it('should preserve the original protocol if the protocol is http or https', () => {
     expect(autoLink('https://rocket.chat/test')).toMatchObject(

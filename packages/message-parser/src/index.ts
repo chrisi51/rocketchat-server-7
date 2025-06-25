@@ -13,6 +13,7 @@ export type Options = {
     parenthesisSyntax?: boolean;
   };
   customDomains?: string[];
+  supportSchemesForLink?: string;
 };
 
 export const parse = (input: string, options?: Options): Root =>

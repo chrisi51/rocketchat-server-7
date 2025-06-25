@@ -355,11 +355,12 @@ AutolinkedEmail = e:Email { return autoEmail(e); }
  * with customDomains options as intranet: protocol://internaltool.intranet
  *
  */
-AutolinkedURL = u:AutoLinkURL { return autoLink(u, options.customDomains); }
+AutolinkedURL = u:AutoLinkURL { return autoLink(u, options.customDomains, options.supportSchemesForLink); }
 
 AutoLinkURL
   = $(URLScheme URLAuthority AutoLinkURLBody*)
   / $(URLAuthorityHost AutoLinkURLBody*)
+  / $(URLScheme URLBody+)
 
 AutoLinkURLBody =  !(Extra* (Whitespace / EndOfLine)) .
 

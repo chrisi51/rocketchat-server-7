@@ -7,6 +7,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { renderMessageEmoji } from '../lib/utils/renderMessageEmoji';
+import { useAutoLinkSchemes } from '../views/room/MessageList/hooks/useAutoLinkSchemes';
 
 type MarkdownTextParams = {
 	content: string;
@@ -81,9 +82,9 @@ const inlineWithoutBreaksOptions = {
 };
 
 const getRegexp = (supportedURISchemes: string[]): RegExp => {
-	const schemes = supportedURISchemes.join('|');
+       const schemes = supportedURISchemes.join('|');
 
-	return new RegExp(`^(${schemes}):`, 'im');
+       return new RegExp(`^(?:(${schemes}):|//)`, 'im');
 };
 
 type MarkdownTextProps = Partial<MarkdownTextParams>;
@@ -98,8 +99,9 @@ const MarkdownText = ({
 	parseEmoji = false,
 	...props
 }: MarkdownTextProps) => {
-	const sanitizer = dompurify.sanitize;
-	const { t } = useTranslation();
+       const sanitizer = dompurify.sanitize;
+       const { t } = useTranslation();
+       const customSchemes = useAutoLinkSchemes();
 	let markedOptions: marked.MarkedOptions;
 
 	switch (variant) {
@@ -166,8 +168,9 @@ const MarkdownText = ({
 			}
 		});
 
-		return preserveHtml ? html : html && sanitizer(html, { ADD_ATTR: ['target'], ALLOWED_URI_REGEXP: getRegexp(supportedURISchemes) });
-	}, [preserveHtml, sanitizer, content, variant, markedOptions, parseEmoji, t]);
+               const schemes = [...supportedURISchemes, ...customSchemes];
+               return preserveHtml ? html : html && sanitizer(html, { ADD_ATTR: ['target'], ALLOWED_URI_REGEXP: getRegexp(schemes) });
+       }, [preserveHtml, sanitizer, content, variant, markedOptions, parseEmoji, t, customSchemes]);
 
 	return __html ? (
 		<Box

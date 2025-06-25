@@ -206,20 +206,28 @@ export class MessageService extends ServiceClassInternal implements IMessageServ
 	}
 
 	private getMarkdownConfig() {
-		const customDomains = settings.get<string>('Message_CustomDomain_AutoLink')
-			? settings
-					.get<string>('Message_CustomDomain_AutoLink')
-					.split(',')
-					.map((domain) => domain.trim())
-			: [];
+               const customDomains = settings.get<string>('Message_CustomDomain_AutoLink')
+                       ? settings
+                                       .get<string>('Message_CustomDomain_AutoLink')
+                                       .split(',')
+                                       .map((domain) => domain.trim())
+                       : [];
 
-		return {
-			colors: settings.get<boolean>('HexColorPreview_Enabled'),
-			emoticons: true,
-			customDomains,
-			...(settings.get<boolean>('Katex_Enabled') && {
-				katex: {
-					dollarSyntax: settings.get<boolean>('Katex_Dollar_Syntax'),
+               const customSchemes = settings.get<string>('Message_CustomScheme_AutoLink')
+                       ? settings
+                                       .get<string>('Message_CustomScheme_AutoLink')
+                                       .split(',')
+                                       .map((scheme) => scheme.trim())
+                       : [];
+
+               return {
+                       colors: settings.get<boolean>('HexColorPreview_Enabled'),
+                       emoticons: true,
+                       customDomains,
+                       supportSchemesForLink: ['http', 'https', 'ftp', 'ftps', 'tel', 'mailto', 'sms', 'cid', ...customSchemes].join(','),
+                       ...(settings.get<boolean>('Katex_Enabled') && {
+                               katex: {
+                                       dollarSyntax: settings.get<boolean>('Katex_Dollar_Syntax'),
 					parenthesisSyntax: settings.get<boolean>('Katex_Parenthesis_Syntax'),
 				},
 			}),

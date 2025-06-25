@@ -85,7 +85,25 @@ export const link = (src: string, label?: Markup[]): Link => ({
   value: { src: plain(src), label: label ?? [plain(src)] },
 });
 
-export const autoLink = (src: string, customDomains?: string[]) => {
+export const autoLink = (
+  src: string,
+  customDomains?: string[],
+  supportSchemesForLink?: string
+) => {
+  const schemeMatch = /^([a-z][a-z0-9+.-]*):/i.exec(src);
+  const scheme = schemeMatch?.[1]?.toLowerCase();
+  const allowedSchemes = supportSchemesForLink
+    ? supportSchemesForLink.split(',').map((s) => s.trim().toLowerCase())
+    : [];
+
+  if (
+    scheme &&
+    allowedSchemes.includes(scheme) &&
+    !['http', 'https', 'ftp', 'ftps'].includes(scheme)
+  ) {
+    return link(src, [plain(src)]);
+  }
+
   const validHosts = ['localhost', ...(customDomains ?? [])];
   const { isIcann, isIp, isPrivate, domain } = tldParse(src, {
     detectIp: false,

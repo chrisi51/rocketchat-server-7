@@ -66,14 +66,18 @@ export const createMessageSettings = () =>
 				enableQuery: { _id: 'Message_Read_Receipt_Enabled', value: true },
 			});
 		});
-		await this.add('Message_CustomDomain_AutoLink', '', {
-			type: 'string',
-			public: true,
-		});
-		await this.add('Message_AllowEditing', true, {
-			type: 'boolean',
-			public: true,
-		});
+               await this.add('Message_CustomDomain_AutoLink', '', {
+                       type: 'string',
+                       public: true,
+               });
+               await this.add('Message_CustomScheme_AutoLink', '', {
+                       type: 'string',
+                       public: true,
+               });
+               await this.add('Message_AllowEditing', true, {
+                       type: 'boolean',
+                       public: true,
+               });
 		await this.add('Message_AllowEditing_BlockEditInMinutes', 0, {
 			type: 'int',
 			public: true,

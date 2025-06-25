@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 import type { MessageWithMdEnforced } from '../../../lib/parseMessageTextToAstMarkdown';
 import { parseMessageTextToAstMarkdown } from '../../../lib/parseMessageTextToAstMarkdown';
 import { useAutoLinkDomains } from '../../../views/room/MessageList/hooks/useAutoLinkDomains';
+import { useAutoLinkSchemes } from '../../../views/room/MessageList/hooks/useAutoLinkSchemes';
 import { useMessageListAutoTranslate, useMessageListKatex, useMessageListShowColors } from '../list/MessageListContext';
 
 const normalizeAttachments = (attachments: MessageAttachment[], name?: string, type?: string): MessageAttachment[] => {
@@ -58,24 +59,26 @@ const normalizeAttachments = (attachments: MessageAttachment[], name?: string, t
 };
 
 export const useNormalizedMessage = <TMessage extends IMessage>(message: TMessage): MessageWithMdEnforced => {
-	const katex = useMessageListKatex();
-	const katexEnabled = !!katex;
-	const customDomains = useAutoLinkDomains();
-	const autoTranslateOptions = useMessageListAutoTranslate();
-	const showColors = useMessageListShowColors();
+        const katex = useMessageListKatex();
+        const katexEnabled = !!katex;
+       const customDomains = useAutoLinkDomains();
+       const customSchemes = useAutoLinkSchemes();
+        const autoTranslateOptions = useMessageListAutoTranslate();
+        const showColors = useMessageListShowColors();
 
 	return useMemo(() => {
-		const parseOptions: Options = {
-			colors: showColors,
-			emoticons: true,
-			customDomains,
-			...(katexEnabled && {
-				katex: {
-					dollarSyntax: katex.dollarSyntaxEnabled,
-					parenthesisSyntax: katex.parenthesisSyntaxEnabled,
-				},
-			}),
-		};
+               const parseOptions: Options = {
+                       colors: showColors,
+                       emoticons: true,
+                       customDomains,
+                       supportSchemesForLink: ['http', 'https', 'ftp', 'ftps', 'tel', 'mailto', 'sms', 'cid', ...customSchemes].join(','),
+                       ...(katexEnabled && {
+                               katex: {
+                                       dollarSyntax: katex.dollarSyntaxEnabled,
+                                       parenthesisSyntax: katex.parenthesisSyntaxEnabled,
+                               },
+                       }),
+               };
 
 		const normalizedMessage = parseMessageTextToAstMarkdown(message, parseOptions, autoTranslateOptions);
 
@@ -88,5 +91,5 @@ export const useNormalizedMessage = <TMessage extends IMessage>(message: TMessag
 		}
 
 		return normalizedMessage;
-	}, [showColors, customDomains, katexEnabled, katex?.dollarSyntaxEnabled, katex?.parenthesisSyntaxEnabled, message, autoTranslateOptions]);
+       }, [showColors, customDomains, customSchemes, katexEnabled, katex?.dollarSyntaxEnabled, katex?.parenthesisSyntaxEnabled, message, autoTranslateOptions]);
 };

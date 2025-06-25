@@ -81,3 +81,11 @@ We are open to other tags/markups, as long as they don't generate unexpected beh
 
 - Nested lists are unsupported
 - `URL` rule doesn't allow whitespace, `(`, or `)`
+
+## Debugging custom URL schemes
+
+Set the environment variable `DEBUG_CUSTOM_SCHEME=true` or define
+`window.DEBUG_CUSTOM_SCHEME = true` in the browser console. When enabled,
+the parser logs every URL check and whether it was linked using `console.log`.
+Messages already containing a parsed representation are re-parsed so the
+debug output reflects each link candidate.
