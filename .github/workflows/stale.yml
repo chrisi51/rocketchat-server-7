@@ -1,7 +1,10 @@
 name: Close inactive issues
 on:
-  schedule:
-    - cron: '0 */6 * * *'
+  # need credits
+  push:
+    branches:
+      - develop
+      - master
 
 jobs:
   close-issues:

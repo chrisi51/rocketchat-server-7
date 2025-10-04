@@ -3,10 +3,12 @@ name: CI
 on:
   release:
     types: [published]
+  # need credits
   pull_request:
     branches: '**'
     paths-ignore:
       - '**.md'
+  # need credits
   push:
     branches:
       - develop
