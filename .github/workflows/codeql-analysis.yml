@@ -1,9 +1,11 @@
 name: 'Code scanning - action'
 
 on:
+  # need credits
   push:
     branches-ignore:
       - dependabot/**
+  # need credits
   pull_request:
   #schedule:
   #  - cron: '0 13 * * *'

@@ -1,6 +1,7 @@
 name: 'Release PR Description'
 
 on:
+  # need credits
   pull_request:
     branches:
       - master

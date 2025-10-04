@@ -2,6 +2,7 @@
 name: Deploy GitHub Pages
 concurrency: preview-deploy-${{ github.ref }}
 on:
+  # need credits
   push:
     branches:
       - main
